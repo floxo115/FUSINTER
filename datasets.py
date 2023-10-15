@@ -1,4 +1,8 @@
+from typing import Tuple
+
+import matplotlib
 import numpy as np
+from matplotlib import pyplot as plt
 
 # The dataset from the paper
 paper_raw_dataset = np.array([
@@ -46,3 +50,30 @@ paper_raw_dataset = np.array([
 paper_dataset_x = paper_raw_dataset[:, 0]
 paper_dataset_y = paper_raw_dataset[:, 1]
 
+
+def get_plot_for_paper_data(data_x: np.ndarray, data_y: np.ndarray, title="") -> Tuple[plt.Figure, plt.Axes]:
+    """
+    creates a plot as given in the paper for data given in the paper
+    :param data_x: array of integer values
+    :param data_y:  array of integer labels
+    :param title: optional title of the plot
+    :return: Matplotlib Figure and Axes for plotting
+    """
+    fig, ax = plt.subplots(1, 1)
+    data_len = len(data_x)
+
+    already_in_position = [1]*data_len
+    y_offset = 1
+    for cur_label in np.unique(data_y):
+        positions = []
+        for cur_value in data_x[data_y == cur_label]:
+            positions.append((cur_value, y_offset * already_in_position[cur_value]))
+            already_in_position[cur_value] += 1
+
+        ax.scatter(*zip(*positions), label=f"class {cur_label}")
+
+    ax.grid()
+    ax.set_ylim(0.5,max(already_in_position))
+    ax.legend()
+    ax.set_title(title)
+    return fig, ax

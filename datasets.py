@@ -1,6 +1,5 @@
 from typing import Tuple
 
-import matplotlib
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -62,7 +61,7 @@ def get_plot_for_paper_data(data_x: np.ndarray, data_y: np.ndarray, title="") ->
     fig, ax = plt.subplots(1, 1)
     data_len = len(data_x)
 
-    already_in_position = [1]*data_len
+    already_in_position = [1] * data_len
     y_offset = 1
     for cur_label in np.unique(data_y):
         positions = []
@@ -70,10 +69,13 @@ def get_plot_for_paper_data(data_x: np.ndarray, data_y: np.ndarray, title="") ->
             positions.append((cur_value, y_offset * already_in_position[cur_value]))
             already_in_position[cur_value] += 1
 
-        ax.scatter(*zip(*positions), label=f"class {cur_label}")
+        ax.scatter(*zip(*positions),s=100, label=f"class {cur_label}")
 
     ax.grid()
-    ax.set_ylim(0.5,max(already_in_position))
+    ax.set_ylim(0.5, max(already_in_position))
     ax.legend()
     ax.set_title(title)
+
+    fig.set_figwidth(15)
+
     return fig, ax

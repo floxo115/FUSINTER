@@ -29,19 +29,18 @@ class FUSINTERDiscretizer:
         self.data_x = data_x.copy()
         self.data_y = data_y.copy()
 
+        # sort the given dataset
+        sort_idx = np.argsort(self.data_x)
+        self.data_y = self.data_y[sort_idx]
+        self.data_x = self.data_x[sort_idx]
+
     def apply(self) -> np.ndarray:
         """
         :return: a numpy array of continuous interval split points for the discretization of the classes dataset
         """
 
-        self.sort_input()
         self.get_initial_intervals()
         return np.array([])
-
-    def sort_input(self):
-        sort_idx = np.argsort(self.data_x)
-        self.data_y = self.data_y[sort_idx]
-        self.data_x = self.data_x[sort_idx]
 
     def get_initial_intervals(self):
         """

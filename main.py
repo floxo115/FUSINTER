@@ -6,10 +6,12 @@ print(paper_raw_dataset)
 
 fig, ax = datasets.get_plot_for_paper_data(datasets.paper_dataset_x, datasets.paper_dataset_y, title="data from paper")
 
-plt.show()
 
 from fusinter_v1 import FUSINTERDiscretizer
 
 fusinter = FUSINTERDiscretizer(paper_dataset_x, paper_dataset_y)
 
-print(fusinter.get_initial_intervals())
+split_lines, split_labels = fusinter.get_initial_intervals()
+ax = datasets.add_split_lines_to_plot(ax, split_lines, split_labels, x_offset=-0.5)
+ax.legend()
+fig.show()

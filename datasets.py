@@ -1,7 +1,8 @@
-from typing import Tuple
+from typing import Tuple, List
 
 import numpy as np
-from matplotlib import pyplot as plt
+from matplotlib import pyplot as plt, colors as mcolors
+colors = list(mcolors.TABLEAU_COLORS.values())
 
 # The dataset from the paper
 paper_raw_dataset = np.array([
@@ -63,13 +64,13 @@ def get_plot_for_paper_data(data_x: np.ndarray, data_y: np.ndarray, title="") ->
 
     already_in_position = [1] * data_len
     y_offset = 1
-    for cur_label in np.unique(data_y):
+    for cur_label, color in zip(np.unique(data_y), colors):
         positions = []
         for cur_value in data_x[data_y == cur_label]:
             positions.append((cur_value, y_offset * already_in_position[cur_value]))
             already_in_position[cur_value] += 1
 
-        ax.scatter(*zip(*positions),s=100, label=f"class {cur_label}")
+        ax.scatter(*zip(*positions),s=100,color=color, label=f"class {cur_label}")
 
     ax.grid()
     ax.set_ylim(0.5, max(already_in_position))
@@ -79,3 +80,22 @@ def get_plot_for_paper_data(data_x: np.ndarray, data_y: np.ndarray, title="") ->
     fig.set_figwidth(15)
 
     return fig, ax
+
+def add_split_lines_to_plot(ax: plt.Axes, split_lines: np.ndarray, labels: np.ndarray, x_offset = 0) -> plt.Axes:
+    """
+    Adds lines indicating the interval splits to plot like in the paper
+    :param ax: matplotlib Axes
+    :param split_lines:  numpy array from the fusinter splitting algorithm
+    :param labels:  numpy array of labels from the fusinter splitting algorithm
+    :param x_offset: scalar offset for the splitting lines. Can be set for better visibility.
+    :return: The matplotlib Axes object given to the function
+    """
+    label_types = np.unique(labels)
+    split_lines = np.hstack((split_lines, split_lines[-1] + 1))
+    label_types = np.roll(label_types, -1)
+    for label_type, color in zip(label_types, colors):
+        label_idx = labels == label_type
+        cur_splits = split_lines[label_idx]
+        y_min, y_max = ax.get_ylim()
+        ax.vlines(x=cur_splits+x_offset,linewidth=3, ymin = y_min, ymax=y_max, color=color, label=f"split class {label_type}")
+    return ax

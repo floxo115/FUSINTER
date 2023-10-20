@@ -84,4 +84,4 @@ class FUSINTERDiscretizer:
                 splits.append(self.data_x[index - 1])
                 labels.append(label)
 
-        return tuple(splits), tuple(labels)
+        return np.array(splits, dtype=np.float64), np.array(labels, dtype=np.int32)

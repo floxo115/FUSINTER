@@ -7,6 +7,9 @@ from fusinter_v1 import FUSINTERDiscretizer
 
 @pytest.fixture()
 def init_data():
+    """
+    :return: a list of initial values and labels for initializing FUSINTERDiscretizer
+    """
     return [
         (
             datasets.paper_dataset_x,
@@ -21,7 +24,7 @@ def init_data():
 @pytest.fixture()
 def init_split_fixture():
     """
-    :return: a list of tuples containing (values, labels, expected splits, expected labels)
+    :return: a list of tuples containing ( expected splits, expected labels)
     """
     return [
         (
@@ -79,3 +82,10 @@ class TestFusinterV1:
             act_splits, act_labels = fusinter.get_initial_intervals()
             assert np.all(act_splits == exp_splits)
             assert np.all(act_labels == exp_labels)
+
+    def test_get_initial_tables(self, init_data, init_tables):
+        for (data_x, data_y), (exp_table) in zip(init_data, init_tables):
+            fusinter = FUSINTERDiscretizer(data_x, data_y)
+            splits, labels = fusinter.get_initial_intervals()
+            act_table = fusinter.create_table(splits)
+            assert np.all(act_table == exp_table)

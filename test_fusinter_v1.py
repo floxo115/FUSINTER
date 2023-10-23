@@ -35,6 +35,22 @@ def init_split_fixture():
     ]
 
 
+@pytest.fixture
+def init_tables():
+    """
+    :return: a list of tuples containing (splits, split_labels, T matrix)
+    """
+    return [
+        (
+            np.array([1, 0, 26, 2, 3, 0, 3, 0, 2, 0, 5, 0, 1, 2, 0, 2, 0, 1, 0, 1, 0, 3, 0, 3, 1, 2, 0, 27, 2, 1, 2,
+                      0], dtype=int).reshape(2, 16)
+        ),
+        (
+            np.array([5, 2, 0, 0, 2, 0, 0, 0, 4], dtype=int),
+        )
+    ]
+
+
 class TestFusinterV1:
     def test_init_with_correct_input(self):
         data_x = np.random.rand(50)

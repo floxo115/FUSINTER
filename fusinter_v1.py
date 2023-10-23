@@ -31,6 +31,13 @@ class FUSINTERDiscretizer:
         self.data_x = data_x.copy()
         self.data_y = data_y.copy()
 
+        label_masks = []
+        for label in np.unique(self.data_y):
+            label_masks.append(self.data_y == label)
+
+        for i, label_mask in enumerate(label_masks):
+            self.data_y[label_mask] = i
+
         # sort the given dataset
         sort_idx = np.argsort(self.data_x)
         self.data_y = self.data_y[sort_idx]
@@ -86,10 +93,31 @@ class FUSINTERDiscretizer:
 
         return np.array(splits, dtype=np.float64), np.array(labels, dtype=np.int32)
 
-    def create_table(self, init_splits: np.ndarray):
+    def create_table(self, init_splits: np.ndarray) -> np.ndarray:
         """
         creates a table from the initial splits of the data
         :return: np.matrix with k columns and n rows from k splits and n classes
         """
 
-        raise NotImplementedError()
+        n_labels = len(np.unique(self.data_y))
+        n_splits = len(init_splits) + 1
+
+        table = np.zeros((n_labels, n_splits), dtype=int)
+
+        n_labels_in_interval = np.zeros(n_labels, dtype=int)
+        i = 0
+        for split_idx, split_val in enumerate(init_splits):
+            while self.data_x[i] < split_val:
+                n_labels_in_interval[self.data_y[i]] += 1
+                i += 1
+
+            table[:, split_idx] = n_labels_in_interval
+            n_labels_in_interval[:] = 0
+
+        while i < len(self.data_x):
+            n_labels_in_interval[self.data_y[i]] += 1
+            i += 1
+
+        table[:, n_splits - 1] = n_labels_in_interval
+        n_labels_in_interval[:] = 0
+        return table

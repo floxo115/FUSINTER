@@ -33,7 +33,7 @@ def init_split_fixture():
         ),
         (
             np.array([-8., 2.], dtype=np.float64),
-            np.array([1, -1, 3], dtype=np.int32),
+            np.array([0, -1, 2], dtype=np.int32),
         )
     ]
 
@@ -49,7 +49,7 @@ def init_tables():
                       0], dtype=int).reshape(2, 16)
         ),
         (
-            np.array([5, 2, 0, 0, 2, 0, 0, 0, 4], dtype=int),
+            np.array([5, 2, 0, 0, 2, 0, 0, 0, 4], dtype=int).reshape(3,3),
         )
     ]
 

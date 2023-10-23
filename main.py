@@ -15,3 +15,5 @@ split_lines, split_labels = fusinter.get_initial_intervals()
 ax = datasets.add_split_lines_to_plot(ax, split_lines, split_labels, x_offset=-0.5)
 ax.legend()
 fig.show()
+
+print(fusinter.create_table(split_lines))

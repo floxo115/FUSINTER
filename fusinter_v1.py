@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, List
 
 import numpy as np
 
@@ -85,3 +85,11 @@ class FUSINTERDiscretizer:
                 labels.append(label)
 
         return np.array(splits, dtype=np.float64), np.array(labels, dtype=np.int32)
+
+    def create_table(self, init_splits: np.ndarray):
+        """
+        creates a table from the initial splits of the data
+        :return: np.matrix with k columns and n rows from k splits and n classes
+        """
+
+        raise NotImplementedError()

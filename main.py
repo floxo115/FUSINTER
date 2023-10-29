@@ -11,9 +11,4 @@ from fusinter_v1 import FUSINTERDiscretizer
 
 fusinter = FUSINTERDiscretizer(paper_dataset_x, paper_dataset_y)
 
-split_lines, split_labels = fusinter.get_initial_intervals()
-ax = datasets.add_split_lines_to_plot(ax, split_lines, split_labels, x_offset=-0.5)
-ax.legend()
-fig.show()
-
-print(fusinter.create_table(split_lines))
+print(fusinter.apply())

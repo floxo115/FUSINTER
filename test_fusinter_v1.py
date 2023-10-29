@@ -90,6 +90,19 @@ class TestFusinterV1:
             act_table = fusinter.create_table(splits)
             assert np.all(act_table == exp_table)
 
+    def test_compress_table(self):
+        input_table = np.array([2,1,0,0,2,4,0,3,0], dtype=int).reshape(3,3)
+        expected_tables = [
+            np.array([3,0,2,4,3,0], dtype=int).reshape(3, 2),
+            np.array([2,1,0,6,0,3], dtype=int).reshape(3, 2),
+        ]
+
+        fusinter = FUSINTERDiscretizer(np.array([1,2,3]), np.array([1,1,1]))
+        for i, expected_table in enumerate(expected_tables):
+             assert np.all(fusinter.compress_table(input_table, i) == expected_table)
+
+
+
 def test_shannon_entropy():
     input_table = np.array([2,1,0,0,2,4,0,3,0], dtype=int).reshape(3,3)
     assert np.isclose(shannon_entropy(input_table, alpha=0.5, lam=0.2), 0.7954323401173174)

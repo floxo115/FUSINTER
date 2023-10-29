@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 import datasets
-from fusinter_v1 import FUSINTERDiscretizer
+from fusinter_v1 import FUSINTERDiscretizer, shannon_entropy
 
 
 @pytest.fixture()
@@ -89,3 +89,7 @@ class TestFusinterV1:
             splits, labels = fusinter.get_initial_intervals()
             act_table = fusinter.create_table(splits)
             assert np.all(act_table == exp_table)
+
+def test_shannon_entropy():
+    input_table = np.array([2,1,0,0,2,4,0,3,0], dtype=int).reshape(3,3)
+    assert np.isclose(shannon_entropy(input_table, alpha=0.5, lam=0.2), 0.7954323401173174)

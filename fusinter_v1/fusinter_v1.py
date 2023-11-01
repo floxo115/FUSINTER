@@ -1,6 +1,6 @@
-from typing import Tuple
-
 import numpy as np
+
+from .splitter import Splitter
 
 
 class FUSINTERDiscretizer:
@@ -8,7 +8,7 @@ class FUSINTERDiscretizer:
     very primitive implementation of the FUSINTER discretization algorithm
     """
 
-    def __init__(self, data_x: np.ndarray, data_y: np.ndarray):
+    def __init__(self, data_x: np.ndarray, data_y: np.ndarray, splitter=Splitter):
         """
         :param data_x: a 1D array of values
         :param data_y: a 1D array of labels
@@ -43,6 +43,9 @@ class FUSINTERDiscretizer:
         self.data_y = self.data_y[sort_idx]
         self.data_x = self.data_x[sort_idx]
 
+        self.splitter = Splitter(self.data_x, self.data_y)
+
+    # TODO Test and Document
     def apply(self) -> np.ndarray:
         """
         :return: a numpy array of continuous interval split points for the discretization of the classes dataset
@@ -67,50 +70,10 @@ class FUSINTERDiscretizer:
             splits = np.delete(splits, max_ind)
             table = merged_tables[max_ind]
 
-
         return splits
 
     def get_initial_intervals(self):
-        """
-        :return: a numpy array of initial split points as described in step 2 of the algorithm
-        """
-
-        def get_label_of_next_value(index: int) -> Tuple[int, int]:
-            """
-            returns the label of the next value from a array of value
-            :param index: starting index
-            :return: Tuple of label and end index
-            """
-            value = self.data_x[index]
-            label = self.data_y[index]
-            index += 1
-            while index < len(self.data_x):
-                if value != self.data_x[index]:
-                    break
-
-                if label != self.data_y[index]:
-                    label = -1
-
-                index += 1
-
-            return label, index
-
-        splits = []
-        labels = []
-        index = 0
-        # we process the first value to get its label
-        label, index = get_label_of_next_value(index)
-        labels.append(label)
-
-        while index < len(self.data_x):
-            # for each value we compare the label to the one before and add splits accordingly
-            label, index = get_label_of_next_value(index)
-            # if the label to the one before differs OR if the label is -1 we add a split
-            if label != labels[-1] or labels[-1] == -1:
-                splits.append(self.data_x[index - 1])
-                labels.append(label)
-
-        return np.array(splits, dtype=np.float64), np.array(labels, dtype=np.int32)
+        return self.splitter.apply()
 
     def create_table(self, init_splits: np.ndarray) -> np.ndarray:
         """

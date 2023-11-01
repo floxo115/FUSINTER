@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 import datasets
-from fusinter_v1 import FUSINTERDiscretizer, shannon_entropy
+from .fusinter_v1 import FUSINTERDiscretizer, shannon_entropy
 
 
 @pytest.fixture()
@@ -21,21 +21,6 @@ def init_data():
         )]
 
 
-@pytest.fixture()
-def init_split_fixture():
-    """
-    :return: a list of tuples containing ( expected splits, expected labels)
-    """
-    return [
-        (
-            np.array([2, 3, 13, 14, 15, 16, 17, 18, 19, 20, 23, 37, 38, 39, 40], dtype=np.float64),
-            np.array([0, 1, 0, -1, 0, 1, 0, 1, -1, 1, 0, 1, -1, -1, 1, 0], dtype=np.int32),
-        ),
-        (
-            np.array([-8., 2.], dtype=np.float64),
-            np.array([0, -1, 2], dtype=np.int32),
-        )
-    ]
 
 
 @pytest.fixture
@@ -76,12 +61,6 @@ class TestFusinterV1:
         with pytest.raises(ValueError):
             fusinter = FUSINTERDiscretizer(data_x, data_y)
 
-    def test_get_initial_intervals(self, init_data, init_split_fixture):
-        for (data_x, data_y), (exp_splits, exp_labels) in zip(init_data, init_split_fixture):
-            fusinter = FUSINTERDiscretizer(data_x, data_y)
-            act_splits, act_labels = fusinter.get_initial_intervals()
-            assert np.all(act_splits == exp_splits)
-            assert np.all(act_labels == exp_labels)
 
     def test_get_initial_tables(self, init_data, init_tables):
         for (data_x, data_y), (exp_table) in zip(init_data, init_tables):

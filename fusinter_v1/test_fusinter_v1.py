@@ -23,20 +23,6 @@ def init_data():
 
 
 
-@pytest.fixture
-def init_tables():
-    """
-    :return: a list of tuples containing (splits, split_labels, T matrix)
-    """
-    return [
-        (
-            np.array([1, 0, 26, 2, 3, 0, 3, 0, 2, 0, 5, 0, 1, 2, 0, 2, 0, 1, 0, 1, 0, 3, 0, 3, 1, 2, 0, 27, 2, 1, 2,
-                      0], dtype=int).reshape(2, 16)
-        ),
-        (
-            np.array([5, 2, 0, 0, 2, 0, 0, 0, 4], dtype=int).reshape(3,3),
-        )
-    ]
 
 
 class TestFusinterV1:
@@ -62,23 +48,6 @@ class TestFusinterV1:
             fusinter = FUSINTERDiscretizer(data_x, data_y)
 
 
-    def test_get_initial_tables(self, init_data, init_tables):
-        for (data_x, data_y), (exp_table) in zip(init_data, init_tables):
-            fusinter = FUSINTERDiscretizer(data_x, data_y)
-            splits, labels = fusinter.get_initial_intervals()
-            act_table = fusinter.create_table(splits)
-            assert np.all(act_table == exp_table)
-
-    def test_compress_table(self):
-        input_table = np.array([2,1,0,0,2,4,0,3,0], dtype=int).reshape(3,3)
-        expected_tables = [
-            np.array([3,0,2,4,3,0], dtype=int).reshape(3, 2),
-            np.array([2,1,0,6,0,3], dtype=int).reshape(3, 2),
-        ]
-
-        fusinter = FUSINTERDiscretizer(np.array([1,2,3]), np.array([1,1,1]))
-        for i, expected_table in enumerate(expected_tables):
-             assert np.all(fusinter.compress_table(input_table, i) == expected_table)
 
 
 

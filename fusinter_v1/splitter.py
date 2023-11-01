@@ -8,6 +8,11 @@ class Splitter:
     Class to compute the initial intervals of the FUSINTER algorithm
     """
     def __init__(self, data_x: np.ndarray, data_y: np.ndarray):
+        """
+        :param data_x: data values (assumed to be ordered)
+        :param data_y: data labels (assumed to be in the range 0...K for K unique labels)
+        """
+
         self.data_x = data_x
         self.data_y = data_y
 

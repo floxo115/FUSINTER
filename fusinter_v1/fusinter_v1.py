@@ -53,7 +53,7 @@ class FUSINTERDiscretizer:
         self.table_manager = table_manager(self.data_x, self.data_y)
 
     # TODO Test and Document
-    def apply(self) -> np.ndarray:
+    def apply(self, alpha=0.95, lam=1) -> np.ndarray:
         """
         :return: a numpy array of continuous interval split points for the discretization of the classes dataset
         """
@@ -68,7 +68,8 @@ class FUSINTERDiscretizer:
 
             split_values = np.zeros(len(merged_tables), dtype=np.float64)
             for i, merged_table in enumerate(merged_tables):
-                split_values[i] = shannon_entropy(table) - shannon_entropy(merged_table)
+                split_values[i] = shannon_entropy(table, alpha=alpha, lam=lam) - shannon_entropy(merged_table,
+                                                                                                 alpha=alpha, lam=lam)
 
             max_ind = np.argmax(split_values)
             if split_values[max_ind] <= 0:

@@ -93,20 +93,13 @@ def add_split_lines_to_plot(ax: plt.Axes, split_lines: np.ndarray, labels: np.nd
     :return: The matplotlib Axes object given to the function
     """
     label_types = np.unique(labels)
-    split_lines = np.hstack((split_lines, split_lines[-1] + 1))
+    # split_lines = np.hstack((split_lines, split_lines[-1] + 1))
     label_types = np.roll(label_types, -1)
     y_min, y_max = ax.get_ylim()
     for label_type, color in zip(label_types, colors):
         label_idx = labels == label_type
         cur_splits = split_lines[label_idx]
 
-        if label_type == -1:
-            label = "split class mixed"
-        else:
-            label = f"split class {label_type}"
+        ax.vlines(x=cur_splits + x_offset, linewidth=3, ymin=y_min, ymax=y_max, color=color)
 
-        ax.vlines(x=cur_splits + x_offset, linewidth=3, ymin=y_min, ymax=y_max, color=color,
-                  label=label)
-
-        ax.legend()
     return ax

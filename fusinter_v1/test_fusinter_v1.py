@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from .fusinter_v1 import FUSINTERDiscretizer, shannon_entropy
+from .fusinter_v1 import FUSINTERDiscretizer, shannon_entropy, quadratic_entropy
 
 
 class TestFusinterV1:
@@ -41,3 +41,14 @@ class TestFusinterV1:
 ])
 def test_shannon_entropy(input_table, alpha, lam, expected):
     assert np.isclose(shannon_entropy(input_table, alpha=alpha, lam=lam), expected)
+
+
+@pytest.mark.parametrize("input_table, alpha, lam, expected", [
+    (
+            np.array([5, 0, 2, 3], dtype=int).reshape(2, 2),
+            0.4, 0.6,
+            0.4935060520341391,
+    ),
+])
+def test_quadratic_entropy(input_table, alpha, lam, expected):
+    assert np.isclose(quadratic_entropy(input_table, alpha=alpha, lam=lam), expected)

@@ -3,6 +3,14 @@ import numpy as np
 
 class TableManager:
     def __init__(self, data_x: np.ndarray, data_y: np.ndarray):
+
+        if not isinstance(data_x, np.ndarray) or not isinstance(data_y, np.ndarray):
+            raise ValueError("data inputs have to be of type ndarray")
+        if not np.issubdtype(data_y.dtype, np.integer):
+            raise ValueError("data_x has to be of type float and data_y has to be of type int")
+        if not TableManager._is_sorted(data_x):
+            raise ValueError("data has to be sorted in ascending order")
+
         self.data_x = data_x
         self.data_y = data_y
 
@@ -68,3 +76,7 @@ class TableManager:
             init_table_index += 1
 
         return new_table
+
+    @staticmethod
+    def _is_sorted(x):
+        return np.all(x[:-1] <= x[1:])

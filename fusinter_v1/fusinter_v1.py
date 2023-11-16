@@ -49,6 +49,7 @@ def quadratic_entropy(input_table: np.ndarray, alpha, lam) -> float:
 
     return result
 
+
 class FUSINTERDiscretizer:
     """
     very primitive implementation of the FUSINTER discretization algorithm
@@ -99,16 +100,17 @@ class FUSINTERDiscretizer:
         self.table_manager = table_manager(self.data_x, self.data_y)
         self.entropy_func = entropy_func
 
-    # TODO Test and Document
     def apply(self, alpha=0.975, lam=1) -> np.ndarray:
         """
+        :alpha: alpha float parameter for the entropy merge criterion
+        :lam: lambda float parameter for the entropy merge criterion
         :return: a numpy array of continuous interval split points for the discretization of the classes dataset
         """
 
         splits, _ = self.get_initial_intervals()
         table = self.create_table(splits)
 
-        while len(splits) > 1:
+        while len(splits) >= 1:
             merged_tables = []
             for i, _ in enumerate(splits):
                 merged_tables.append(self.compress_table(table, i))
@@ -116,7 +118,8 @@ class FUSINTERDiscretizer:
             split_values = np.zeros(len(merged_tables), dtype=np.float64)
             for i, merged_table in enumerate(merged_tables):
                 split_values[i] = self.entropy_func(table, alpha=alpha, lam=lam) - self.entropy_func(merged_table,
-                                                                                                 alpha=alpha, lam=lam)
+                                                                                                     alpha=alpha,
+                                                                                                     lam=lam)
 
             max_ind = np.argmax(split_values)
             if split_values[max_ind] <= 0:
@@ -145,5 +148,3 @@ class FUSINTERDiscretizer:
         :return: a table like the input but with 2 consecutive columns merged
         """
         return self.table_manager.compress_table(input_table, i)
-
-

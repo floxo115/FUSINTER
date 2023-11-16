@@ -1,9 +1,9 @@
 import numpy as np
 import seaborn as sns
+from matplotlib import pyplot as plt
 
 import datasets
-from matplotlib import pyplot as plt
-from datasets import  paper_raw_dataset, paper_dataset_y, paper_dataset_x
+from datasets import paper_dataset_y, paper_dataset_x
 from fusinter_v1 import FUSINTERDiscretizer
 
 # Comparisons to the paper outputs
@@ -24,11 +24,12 @@ fig.show()
 
 # 2. Plot the same for the Iris dataset (petal length feature)
 from sklearn.datasets import load_iris
+
 iris_ds = load_iris()
 data_x = iris_ds["data"][:, 2]
 data_y = iris_ds["target"]
 
-fig, ax = plt.subplots(1,1)
+fig, ax = plt.subplots(1, 1)
 for i in np.unique(data_y):
     sns.kdeplot(data_x[data_y == i], ax=ax, label=f"class {i}")
 
@@ -38,7 +39,7 @@ ax = datasets.add_split_lines_to_plot(ax, splits, splits_labels[:-1])
 plt.title("Iris Dataset (Petal Length) Initial Splits")
 plt.show()
 
-fig, ax = plt.subplots(1,1)
+fig, ax = plt.subplots(1, 1)
 for i in np.unique(data_y):
     sns.kdeplot(data_x[data_y == i], ax=ax, label=f"class {i}")
 

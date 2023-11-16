@@ -7,6 +7,7 @@ class Splitter:
     """
     Class to compute the initial intervals of the FUSINTER algorithm
     """
+
     def __init__(self, data_x: np.ndarray, data_y: np.ndarray):
         """
         :param data_x: data values (assumed to be ordered)

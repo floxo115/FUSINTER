@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 
 import datasets
 from datasets import paper_dataset_y, paper_dataset_x
-from fusinter_v1 import FUSINTERDiscretizer
+from fusinter_v2 import FUSINTERDiscretizer
 
 # Comparisons to the paper outputs
 # 1. Plot to compare the initial splits of the FUSINTER implementation to the ones given in the paper on page 341

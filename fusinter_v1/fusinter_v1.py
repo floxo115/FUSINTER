@@ -60,7 +60,7 @@ class FUSINTERDiscretizer:
                  data_y: np.ndarray,
                  splitter=Splitter,
                  table_manager=TableManager,
-                 entropy_func=quadratic_entropy,
+                 entropy_func=shannon_entropy,
                  ):
         """
         :param data_x: a 1D array of values

@@ -117,13 +117,17 @@ class FUSINTERDiscretizer:
             mvc = MergeValueComputer(table, alpha, lam)
             split_values = mvc.get_table_entropy() - mvc.get_all_merge_values()
 
-            max_ind = np.argmax(split_values)
+            max_ind = np.argmax(split_values).item()
             if split_values[max_ind] <= 0:
                 break
 
+            # TODO find best way to do the update
             splits = np.delete(splits, max_ind)
-            table[:, max_ind] = table[:, max_ind + 1]
-            table = np.delete(table, max_ind + 1, axis=1)
+            # table[:, max_ind] = table[:, max_ind + 1]
+            # table = np.delete(table, max_ind + 1, axis=1)
+            table = self.table_manager.compress_table(table, max_ind)
+
+            #mvc.update(table, max_ind)
 
         return splits
 

@@ -117,9 +117,9 @@ class FUSINTERDiscretizer:
 
             split_values = np.zeros(len(merged_tables), dtype=np.float64)
             for i, merged_table in enumerate(merged_tables):
-                split_values[i] = self.entropy_func(table, alpha=alpha, lam=lam) - self.entropy_func(merged_table,
+                split_values[i] = np.round(self.entropy_func(table, alpha=alpha, lam=lam) - self.entropy_func(merged_table,
                                                                                                      alpha=alpha,
-                                                                                                     lam=lam)
+                                                                                                     lam=lam),5)
 
             max_ind = np.argmax(split_values)
             if split_values[max_ind] <= 0:

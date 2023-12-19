@@ -115,7 +115,7 @@ class FUSINTERDiscretizer:
 
         while len(splits) >= 1:
             mvc = MergeValueComputer(table, alpha, lam)
-            split_values = mvc.get_table_entropy() - mvc.get_all_merge_values()
+            split_values = np.round(mvc.get_table_entropy() - mvc.get_all_merge_values(),5)
 
             max_ind = np.argmax(split_values).item()
             if split_values[max_ind] <= 0:

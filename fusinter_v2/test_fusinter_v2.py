@@ -1,10 +1,12 @@
 import numpy as np
 import pytest
 
+from datasets import paper_dataset_x, paper_dataset_y
+from fusinter_v1 import FUSINTERDiscretizer as FUSINTERDiscretizer_v1
 from .fusinter_v2 import FUSINTERDiscretizer
 
 
-class TestFusinterV1:
+class TestFusinterV2:
     def test_init_with_correct_input(self):
         data_x = np.random.rand(50)
         data_y = np.random.randint(0, 5, 50)
@@ -26,5 +28,17 @@ class TestFusinterV1:
         with pytest.raises(ValueError):
             fusinter = FUSINTERDiscretizer(data_x, data_y)
 
+    def test_if_apply_give_same_result_as_v1(self):
+        for alpha in np.linspace(0, 1, 3):
+            for lam in np.linspace(0,1, 3):
+                v1 = FUSINTERDiscretizer_v1(paper_dataset_x, paper_dataset_y)
+                v1_splits = v1.apply(alpha, lam)
+                v2 = FUSINTERDiscretizer(paper_dataset_x, paper_dataset_y)
+                v2_splits = v2.apply(alpha, lam)
+
+                if len(v1_splits) == 0:
+                    assert len(v2_splits) == 0
+                else:
+                    assert np.all(v1_splits == v2_splits)
 
 

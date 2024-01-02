@@ -13,6 +13,6 @@ def f(dataset_increase_factor = 10):
     fusinter.apply()
 
 if __name__ == "__main__":
-    print("benchmark v1")
+    print("benchmark v2")
     for i in range(1, 100):
         print(f"f took {round(timeit('f('+str(i)+')', setup='from benchmark_v2 import f', number=5) / 5,4)} seconds to run with multiplicator {i}")

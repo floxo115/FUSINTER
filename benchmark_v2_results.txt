@@ -1,4 +1,4 @@
-benchmark v1
+benchmark v2
 f took 0.1807 seconds to run with multiplicator 1
 f took 0.0113 seconds to run with multiplicator 2
 f took 0.0274 seconds to run with multiplicator 3

@@ -1,0 +1,11 @@
+benchmark v1
+f took 0.1807 seconds to run with multiplicator 1
+f took 0.0113 seconds to run with multiplicator 2
+f took 0.0274 seconds to run with multiplicator 3
+f took 0.0395 seconds to run with multiplicator 4
+f took 0.0591 seconds to run with multiplicator 5
+f took 0.0804 seconds to run with multiplicator 6
+f took 0.1081 seconds to run with multiplicator 7
+f took 0.1437 seconds to run with multiplicator 8
+f took 0.1787 seconds to run with multiplicator 9
+f took 0.2121 seconds to run with multiplicator 10

@@ -17,4 +17,5 @@ def f(dataset_increase_factor = 10):
 
 if __name__ == "__main__":
     print("benchmark v1")
-    print(f"f took {timeit('f()', setup='from benchmark_v1 import f', number=10 ** 1) / 10 ** 1} seconds to run")
+    for i in range(1, 11):
+        print(f"f took {round(timeit('f('+str(i)+')', setup='from benchmark_v1 import f', number=5) / 5, 4)} seconds to run with multiplicator {i}")

@@ -1,0 +1,6 @@
+[submodule "fusinter_v3/external/eigen"]
+	path = fusinter_v3/external/eigen
+	url = https://gitlab.com/libeigen/eigen.git
+[submodule "fusinter_v3/external/Catch2"]
+	path = fusinter_v3/external/Catch2
+	url = https://github.com/catchorg/Catch2.git

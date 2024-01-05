@@ -1,7 +1,3 @@
-//
-// Created by floxo on 1/4/24.
-//
-
 #ifndef FUSINTER_V3_SPLITTER_H
 #define FUSINTER_V3_SPLITTER_H
 
@@ -15,6 +11,7 @@
 namespace lib {
 
     class Splitter {
+    private:
         data_vec data_x;
         label_vec data_y;
 
@@ -27,22 +24,22 @@ namespace lib {
         };
 
 
-        std::vector<float> apply(){
+        std::vector<float> apply() {
             std::vector<float> splits;
             std::vector<int> labels;
             int index = 0;
             int label;
 
-              std::tie(label, index) = this->get_label_of_next_value(index);
-              labels.push_back(label);
+            std::tie(label, index) = this->get_label_of_next_value(index);
+            labels.push_back(label);
 //            auto tuple = this->get_label_of_next_value(index);
 //            auto label = std::get<0>(tuple);
 //            index = std::get<1>(tuple);
 
-            while(index < this->data_x.size()){
+            while (index < this->data_x.size()) {
                 std::tie(label, index) = this->get_label_of_next_value(index);
 
-                if (label != labels.back() || labels.back() == -1){
+                if (label != labels.back() || labels.back() == -1) {
                     splits.push_back(this->data_x[index - 1]);
                     labels.push_back(label);
                 }

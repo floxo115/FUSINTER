@@ -1,7 +1,3 @@
-//
-// Created by floxo on 1/4/24.
-//
-
 #ifndef FUSINTER_V3_TABLEMANAGER_H
 #define FUSINTER_V3_TABLEMANAGER_H
 

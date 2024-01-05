@@ -1,7 +1,3 @@
-//
-// Created by floxo on 1/4/24.
-//
-
 #ifndef FUSINTER_V3_ERRORS_H
 #define FUSINTER_V3_ERRORS_H
 #include<exception>

@@ -1,7 +1,3 @@
-//
-// Created by floxo on 1/4/24.
-//
-
 #include <catch2/catch_test_macros.hpp>
 
 #include "../paper_data.h"

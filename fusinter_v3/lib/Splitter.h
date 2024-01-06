@@ -16,7 +16,7 @@ namespace lib {
         label_vec data_y;
 
     public:
-        Splitter(data_vec data_x, label_vec data_y) : data_x(data_x), data_y(data_y) {
+        Splitter(const data_vec &data_x, const label_vec &data_y) : data_x(data_x), data_y(data_y) {
             if (!std::is_sorted(data_x.begin(), data_x.end()))
                 throw NOT_SORTED_ERROR();
             if (data_y.size() != data_x.size())

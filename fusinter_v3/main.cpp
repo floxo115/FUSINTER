@@ -20,4 +20,8 @@ int main(){
     auto tm = lib::TableManager(paper_data_x, paper_data_y);
     auto table = tm.create_table(splits);
     std::cout << table << std::endl;
+
+    auto comp_table = tm.compress_table(table, 1);
+    std::cout << comp_table << std::endl;
+
 }

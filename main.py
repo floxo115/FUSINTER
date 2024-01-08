@@ -54,12 +54,21 @@ from fusinter_v1 import FUSINTERDiscretizer
 # plt.show()
 
 
-alpha = 0.6
-lam = 0.4
-fusinter = FUSINTERDiscretizer(paper_dataset_x, paper_dataset_y)
-final_splits_v1 = fusinter.apply(alpha=alpha, lam=lam)
-fusinter = FUSINTERDiscretizer_v2(paper_dataset_x, paper_dataset_y)
-final_splits_v2 = fusinter.apply(alpha=alpha, lam=lam)
+# alpha = 0.6
+# lam = 0.4
+# fusinter = FUSINTERDiscretizer(paper_dataset_x, paper_dataset_y)
+# final_splits_v1 = fusinter.apply(alpha=alpha, lam=lam)
+# fusinter = FUSINTERDiscretizer_v2(paper_dataset_x, paper_dataset_y)
+# final_splits_v2 = fusinter.apply(alpha=alpha, lam=lam)
 
-print(final_splits_v1)
-print(final_splits_v2)
+from fusinter_v2.splitter import Splitter
+from fusinter_v2.table_manager import TableManager
+
+splitter = Splitter(paper_dataset_x, paper_dataset_y)
+input_splits, _ = splitter.apply()
+
+tm = TableManager(paper_dataset_x, paper_dataset_y)
+table = tm.create_table(input_splits)
+print(table)
+
+

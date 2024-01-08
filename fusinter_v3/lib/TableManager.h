@@ -56,7 +56,7 @@ namespace lib {
             return table;
         }
 
-        static lib::table compress_table(table &input_table, const int i) {
+        static lib::table compress_table(const table &input_table, const int i) {
             int n = input_table.rows();
             int m = input_table.cols();
 
@@ -69,14 +69,16 @@ namespace lib {
 
             int init_table_index = 0;
             int new_table_index = 0;
+            //TODO refactor this code
             while (init_table_index < m) {
-                auto new_col = new_table.col(new_table_index);
                 if (init_table_index == i) {
+                    auto new_col = new_table.col(new_table_index);
                     auto old_left_col = input_table.col(init_table_index);
                     auto old_right_col = input_table.col(init_table_index + 1);
                     new_col = old_left_col + old_right_col;
                     new_table_index += 1;
                 } else if (init_table_index != i + 1) {
+                    auto new_col = new_table.col(new_table_index);
                     new_col = input_table.col(init_table_index);
                     new_table_index += 1;
                 }

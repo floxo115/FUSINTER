@@ -8,6 +8,7 @@
 
 #include "typedefs.h"
 #include "errors.h"
+
 namespace lib {
     class TableManager {
     private:
@@ -35,7 +36,7 @@ namespace lib {
             n_labels_in_interval.setZero();
 
             auto i = 0;
-            for (auto split_idx = 0; split_idx < init_splits.size(); split_idx++){
+            for (auto split_idx = 0; split_idx < init_splits.size(); split_idx++) {
                 auto split_val = init_splits[split_idx];
                 while (this->data_x[i] < split_val) {
                     n_labels_in_interval[this->data_y[i]] += 1;
@@ -46,7 +47,7 @@ namespace lib {
                 n_labels_in_interval.setZero();
             }
 
-            while (i < this->data_x.size()){
+            while (i < this->data_x.size()) {
                 n_labels_in_interval[this->data_y[i]] += 1;
                 i += 1;
             }
@@ -55,8 +56,35 @@ namespace lib {
             return table;
         }
 
-        lib::table compress_table(const lib::table &input_table, const int i) {
-            return Eigen::Matrix<int, -1, -1>{{1}};
+        static lib::table compress_table(table &input_table, const int i) {
+            int n = input_table.rows();
+            int m = input_table.cols();
+
+            if (i < 0 || (m - 1) < i) {
+                // TODO create Exception class
+                throw "the parameter i has to have values between 0 and (len of columns -1), but is {i}";
+            }
+
+            Eigen::Matrix<int, -1, -1> new_table(n, m - 1);
+
+            int init_table_index = 0;
+            int new_table_index = 0;
+            while (init_table_index < m) {
+                auto new_col = new_table.col(new_table_index);
+                if (init_table_index == i) {
+                    auto old_left_col = input_table.col(init_table_index);
+                    auto old_right_col = input_table.col(init_table_index + 1);
+                    new_col = old_left_col + old_right_col;
+                    new_table_index += 1;
+                } else if (init_table_index != i + 1) {
+                    new_col = input_table.col(init_table_index);
+                    new_table_index += 1;
+                }
+
+                init_table_index += 1;
+
+            }
+            return new_table;
         }
     };
 }

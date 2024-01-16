@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from fusinter_v2.merge_value_computer import MergeValueComputer
+from .merge_value_computer import MergeValueComputer
 from fusinter_v1.fusinter_v1 import shannon_entropy
 
 
@@ -40,4 +40,4 @@ def test_get_merged_table_entropy(original_table, merged_table,  alpha, lam, mer
     expected = shannon_entropy(merged_table, alpha, lam)
     mvc = MergeValueComputer(original_table, alpha, lam)
 
-    assert np.isclose(mvc.get_merged_table_entropy(merge_index), expected)
+    assert np.isclose(mvc.get_table_entropy() - mvc.compute_delta(merge_index), expected)

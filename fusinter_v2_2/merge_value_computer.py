@@ -42,15 +42,11 @@ class MergeValueComputer:
         self.n = np.sum(input_table)
         self.entropy_func = lambda x: entropy_func(x, self.alpha, self.lam, self.m, self.n)
         self.cols_entropy = np.apply_along_axis(self.entropy_func, 0, self.table)
-        self.merge_entropy = np.zeros(self.k)
 
-        for col_idx in range(self.k):
-            self.merge_entropy[col_idx] = self.compute_merge_entropy(col_idx)
+        self.deltas = np.zeros(self.k-1)
 
-        self.deltas = np.zeros(self.k)
-
-        for col_idx in range(self.k):
-            self.deltas[col_idx] = self.compute_merge_entropy(col_idx)
+        for col_idx in range(self.k-1):
+            self.deltas[col_idx] = self.compute_delta(col_idx)
 
 
     def compute_merge_entropy(self, col_idx):
@@ -63,28 +59,29 @@ class MergeValueComputer:
         """
         return np.sum(self.cols_entropy)
 
-    def compute_delta(self, col_index):
+    def compute_delta(self, col_index, left=False):
         """
-        Computes the entropy of the table merged at given index
+        Computes the deltas of the table merged at given index, and left or neighbor
         :param col_index: Index of colum that should be merged with its successor
-        :return: entropy of the merged table
+        :param left: If True, the delta for the left neighbor is computed, If False the delta for the right one
+        :return: delta of the possible merge
         """
-        entropy = self.get_table_entropy()
-        entropy -= self.cols_entropy[col_index]
-        entropy -= self.cols_entropy[col_index + 1]
-        entropy += self.merge_entropy[col_index]
+        if left is True:
+            col_index = col_index - 1
+
+        entropy = 0
+        entropy += self.cols_entropy[col_index]
+        entropy += self.cols_entropy[col_index + 1]
+        entropy -= self.compute_merge_entropy(col_index)
         return entropy
 
-    def get_all_merge_values(self):
+    def get_all_deltas(self):
         """
-        Computes entropies of all possible merges of original table.
-        :return: numpy array of all possible entropies obtained by merging columns
+        Computes deltas of all possible merges of original table.
+        :return: numpy array of all possible deltas obtained by merging columns
         """
-        merge_values = np.zeros(self.k - 1)
-        for i in range(self.k - 1):
-            merge_values[i] = self.compute_delta(i)
 
-        return merge_values
+        return  self.deltas
 
     def update(self, table, max_ind):
         """
@@ -94,14 +91,18 @@ class MergeValueComputer:
         """
         self.table = table
         self.k -= 1
-        self.cols_entropy[max_ind] = self.entropy_func(self.table[:, max_ind])
-        self.merge_entropy[max_ind] = self.compute_merge_entropy(max_ind)
-        self.deltas[max_ind] = self.compute_delta(max_ind)
-        if max_ind != 0:
-            self.merge_entropy[max_ind - 1] = self.compute_merge_entropy(max_ind - 1)
-            self.deltas[max_ind - 1] = self.compute_delta(max_ind - 1)
 
-
-
+        self.cols_entropy[max_ind] = self.entropy_func(self.table[:, max_ind].ravel())
         self.cols_entropy = np.delete(self.cols_entropy, max_ind + 1)
-        self.merge_entropy = np.delete(self.merge_entropy, max_ind + 1)
+
+        if max_ind != 0:
+            self.deltas[max_ind - 1] = self.compute_delta(max_ind, left=True)
+        if max_ind != len(self.deltas) -1:
+            self.deltas[max_ind + 1] = self.compute_delta(max_ind)
+
+        self.deltas = np.delete(self.deltas, max_ind)
+
+
+
+
+

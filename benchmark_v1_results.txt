@@ -1,11 +1,3 @@
 benchmark v1
-f took 0.0495 seconds to run with multiplicator 1
-f took 0.3541 seconds to run with multiplicator 2
-f took 1.1334 seconds to run with multiplicator 3
-f took 2.6202 seconds to run with multiplicator 4
-f took 5.005 seconds to run with multiplicator 5
-f took 8.5336 seconds to run with multiplicator 6
-f took 13.5499 seconds to run with multiplicator 7
-f took 20.587 seconds to run with multiplicator 8
-f took 30.1785 seconds to run with multiplicator 9
-f took 40.6007 seconds to run with multiplicator 10
+paper dataset: 0.0662
+covertype features 0 to 9: 

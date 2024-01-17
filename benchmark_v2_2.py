@@ -1,6 +1,6 @@
 from timeit import timeit
 
-from fusinter_v2 import FUSINTERDiscretizer
+from fusinter_v2_2 import FUSINTERDiscretizer
 from datasets.paper_dataset import *
 
 import pandas as pd
@@ -18,9 +18,7 @@ def f(data_x, data_y):
 if __name__ == "__main__":
     print("benchmark v1")
     print("paper dataset", end=": ")
-    setup = "from benchmark_v2 import f, paper_dataset_x, paper_dataset_y, cov_x0, cov_y"
+    setup = "from benchmark_v2_2 import f, paper_dataset_x, paper_dataset_y, cov_x0, cov_y"
     print(round(timeit("f(paper_dataset_x, paper_dataset_y)", setup=setup, number=3) / 3, 4))
     print("cov feature 0", end=": ")
     print(round(timeit("f(cov_x0, cov_y)", setup=setup, number=1) / 1, 4))
-
-

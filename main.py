@@ -1,11 +1,6 @@
 import numpy as np
-import seaborn as sns
-from matplotlib import pyplot as plt
 
-import datasets
-from datasets import paper_dataset_y, paper_dataset_x
-from fusinter_v2 import FUSINTERDiscretizer as FUSINTERDiscretizer_v2
-from fusinter_v1 import FUSINTERDiscretizer
+from datasets.paper_dataset import paper_dataset_y, paper_dataset_x
 
 # # Comparisons to the paper outputs
 # # 1. Plot to compare the initial splits of the FUSINTER implementation to the ones given in the paper on page 341
@@ -61,14 +56,37 @@ from fusinter_v1 import FUSINTERDiscretizer
 # fusinter = FUSINTERDiscretizer_v2(paper_dataset_x, paper_dataset_y)
 # final_splits_v2 = fusinter.apply(alpha=alpha, lam=lam)
 
-from fusinter_v2.splitter import Splitter
-from fusinter_v2.table_manager import TableManager
+# from fusinter_v2.splitter import Splitter
+# from fusinter_v2.table_manager import TableManager
+#
+# splitter = Splitter(paper_dataset_x, paper_dataset_y)
+# input_splits, _ = splitter.apply()
+#
+# tm = TableManager(paper_dataset_x, paper_dataset_y)
+# table = tm.create_table(input_splits)
+# print(table)
 
-splitter = Splitter(paper_dataset_x, paper_dataset_y)
-input_splits, _ = splitter.apply()
 
-tm = TableManager(paper_dataset_x, paper_dataset_y)
-table = tm.create_table(input_splits)
-print(table)
+# from fusinter_v2_2_new_interface import FUSINTERDiscretizer
+#
+# discretizer = FUSINTERDiscretizer(0.95, 1)
+#
+# discretizer.fit(paper_dataset_x, paper_dataset_y)
+# print(discretizer.transform(paper_dataset_x))
+#
+# from fusinter_v2_2 import FUSINTERDiscretizer
+#
+# discretizer = FUSINTERDiscretizer(paper_dataset_x, paper_dataset_y)
+# print(np.digitize(paper_dataset_x, discretizer.apply(0.95, 1)))
 
+from fusinter_v2_2_new_interface import FUSINTERDiscretizer
+import pandas as pd
 
+discretizer = FUSINTERDiscretizer(0.95, 1)
+
+cov_df = pd.read_csv("datasets/covtype.data", header=None)
+cov_y = cov_df.pop(cov_df.shape[1] - 1).to_numpy()
+cov_x0 = cov_df.pop(0).to_numpy()
+
+discretizer.fit(cov_x0, cov_y)
+print(discretizer.transform(sorted(cov_x0)))

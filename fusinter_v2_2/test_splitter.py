@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-import datasets
+from datasets import paper_dataset
 from .splitter import Splitter
 
 
@@ -9,8 +9,8 @@ class TestSplitter:
 
     @pytest.mark.parametrize("data_x,data_y,exp_splits", [
         (
-                datasets.paper_dataset_x,
-                datasets.paper_dataset_y,
+                paper_dataset.paper_dataset_x,
+                paper_dataset.paper_dataset_y,
                 np.array([2, 3, 13, 14, 15, 16, 17, 18, 19, 20, 23, 37, 38, 39, 40], dtype=np.float64),
         ),
         (

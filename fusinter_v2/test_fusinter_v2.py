@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from datasets import paper_dataset_x, paper_dataset_y
+from datasets.paper_dataset import paper_dataset_x, paper_dataset_y
 from fusinter_v1 import FUSINTERDiscretizer as FUSINTERDiscretizer_v1
 from .fusinter_v2 import FUSINTERDiscretizer
 

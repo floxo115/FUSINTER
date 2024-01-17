@@ -1,15 +1,15 @@
 import numpy as np
 import pytest
 
-import datasets
+from datasets import paper_dataset
 from .table_manager import TableManager
 
 
 class TestTableManager:
     @pytest.mark.parametrize("data_x, data_y, init_splits, expected", [
         [
-            datasets.paper_dataset_x,
-            datasets.paper_dataset_y,
+            paper_dataset.paper_dataset_x,
+            paper_dataset.paper_dataset_y,
             np.array([2, 3, 13, 14, 15, 16, 17, 18, 19, 20, 23, 37, 38, 39, 40], dtype=np.float64),
             np.array([1, 0, 26, 2, 3, 0, 3, 0, 2, 0, 5, 0, 1, 2, 0, 2, 0, 1, 0, 1, 0, 3, 0, 3, 1, 2, 0, 27, 2, 1, 2, 0],
                      dtype=int).reshape(2, 16),

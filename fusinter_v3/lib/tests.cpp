@@ -136,7 +136,7 @@ TEST_CASE("Shannon Entauto data") {
             ShannonEntropyTestInput(Eigen::VectorXi{{6,4,7,2,1,6,7,8,5,4}}, 0.2, 0.7, 10,50, 0.753156)
     );
 
-    auto result = shannon_entropy(data.column, data.alpha, data.lam, data.m, data.n);
+    auto result = lib::shannon_entropy(data.column, data.alpha, data.lam, data.m, data.n);
     result *= std::pow(10, 6);
     result = std::ceil(result);
 

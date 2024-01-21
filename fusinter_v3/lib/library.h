@@ -3,5 +3,6 @@
 
 #include "Splitter.h"
 #include "TableManager.h"
+#include "MergeValueComputer.h"
 
 #endif //FUSINTER_V3_LIBRARY_H

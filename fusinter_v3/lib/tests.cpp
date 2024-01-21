@@ -146,3 +146,51 @@ TEST_CASE("Shannon Entauto data") {
 
     REQUIRE(result == expected);
 }
+
+
+TEST_CASE("MergeValueComputer") {
+    Eigen::MatrixXi table(3,5);
+    table << 1,0,3,1,5,2,7,3,9,3,2,6,7,8,4;
+
+    SECTION("alpha = 0.5, lam = 0.5"){
+        auto mvc = lib::MergeValueComputer(table, 0.5, 0.5);
+        std::vector<float> expected {0.161442  , 0.06892525, 0.06215969, 0.05056034};
+        auto results = mvc.get_all_deltas();
+        REQUIRE(results.size() == expected.size());
+        for(int i = 0; i < results.size(); i++){
+            auto r = results[i] * 100000;
+            r = std::ceil(r);
+            auto e = expected[i] * 100000;
+            e = std::ceil(e);
+            REQUIRE(r == e);
+        }
+
+        Eigen::MatrixXi table1(3,4);
+        table1 << 1, 0, 3, 6, 2, 7, 3, 12, 2, 6, 7, 12;
+        mvc.update(table1, 3);
+        results = mvc.get_all_deltas();
+        expected = {0.161442  , 0.06892525, 0.06065164};
+        REQUIRE(results.size() == expected.size());
+        for(int i = 0; i < results.size(); i++){
+            auto r = results[i] * 100000;
+            r = std::ceil(r);
+            auto e = expected[i] * 100000;
+            e = std::ceil(e);
+            REQUIRE(r == e);
+        }
+
+        Eigen::MatrixXi table2(3,3);
+        table2 << 1,3,6,9,3,12,8,7,12;
+        mvc.update(table2, 0);
+        results = mvc.get_all_deltas();
+        expected = {0.06215969, 0.06065164};
+        REQUIRE(results.size() == expected.size());
+        for(int i = 0; i < results.size(); i++){
+            auto r = results[i] * 100000;
+            r = std::ceil(r);
+            auto e = expected[i] * 100000;
+            e = std::ceil(e);
+            REQUIRE(r == e);
+        }
+    }
+}

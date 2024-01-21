@@ -10,6 +10,7 @@
 #include "Splitter.h"
 #include "TableManager.h"
 #include "typedefs.h"
+#include "MergeValueComputer.h"
 
 /////////////////////////////////////////////////////// SPLITTER TESTS /////////////////////////////////////////////////
 
@@ -105,7 +106,7 @@ TEST_CASE("TableManager create_table with valid inputs") {
 
 TEST_CASE("TableManager compress_table") {
     auto input_table = lib::table(3, 3);
-    input_table << 2,1,0,0,2,4,0,3,0;
+    input_table << 2, 1, 0, 0, 2, 4, 0, 3, 0;
     std::cout << input_table << std::endl;
     auto expected_tables = std::vector<lib::table>{
             lib::table{{3, 2, 3, 0, 4, 0}}.reshaped(3, 2),
@@ -116,4 +117,32 @@ TEST_CASE("TableManager compress_table") {
     REQUIRE(table == expected_tables[0]);
     table = lib::TableManager::compress_table(input_table, 1);
     REQUIRE(table == expected_tables[1]);
+}
+
+/////////////////////////////////////////////MERGE_VALUE_COMPUTER //////////////////////////////
+
+struct ShannonEntropyTestInput {
+    Eigen::VectorXi column;
+    float alpha;
+    float lam;
+    int m;
+    int n;
+    float expected;
+};
+
+TEST_CASE("Shannon Entauto data") {
+    auto data = GENERATE(
+            ShannonEntropyTestInput(Eigen::VectorXi{{1, 4, 5, 3, 6, 7}}, 0.5, 0.5, 6, 20, 1.649793),
+            ShannonEntropyTestInput(Eigen::VectorXi{{6,4,7,2,1,6,7,8,5,4}}, 0.2, 0.7, 10,50, 0.753156)
+    );
+
+    auto result = shannon_entropy(data.column, data.alpha, data.lam, data.m, data.n);
+    result *= std::pow(10, 6);
+    result = std::ceil(result);
+
+    auto expected = data.expected;
+    expected *= std::pow(10, 6);
+    expected = std::ceil(expected);
+
+    REQUIRE(result == expected);
 }

@@ -57,13 +57,13 @@ namespace lib {
             this->m = table.rows();
             this->n = table.sum();
 
-            for (int i; i < this->table.cols(); i++) {
+            for (int i = 0; i < this->table.cols(); i++) {
                 auto col = this->table.col(i);
                 auto entropy = shannon_entropy(col, this->alpha, this->lam, this->m, this->n);
                 this->cols_entropy.push_back(entropy);
             }
 
-            for (int i; i < this->table.cols() - 1; i++) {
+            for (int i = 0; i < this->table.cols() - 1; i++) {
                 auto delta = compute_delta(i);
                 this->deltas.push_back(delta);
             }

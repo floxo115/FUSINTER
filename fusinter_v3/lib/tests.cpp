@@ -107,7 +107,6 @@ TEST_CASE("TableManager create_table with valid inputs") {
 TEST_CASE("TableManager compress_table") {
     auto input_table = lib::table(3, 3);
     input_table << 2, 1, 0, 0, 2, 4, 0, 3, 0;
-    std::cout << input_table << std::endl;
     auto expected_tables = std::vector<lib::table>{
             lib::table{{3, 2, 3, 0, 4, 0}}.reshaped(3, 2),
             lib::table{{2, 0, 0, 1, 6, 3}}.reshaped(3, 2)

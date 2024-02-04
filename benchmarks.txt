@@ -1,0 +1,17 @@
+benchmark v1
+paper dataset: 0.0538
+wave: OOT
+cover: OOT
+
+benchmark v2
+paper dataset: 0.8452
+covertype features 0 to 9: 810.8134
+wave all features: 101.0536
+benchmark v2.2
+paper dataset: 0.2749
+covertype features 0 to 9: 39.0544
+wave all features: 5.5638
+benchmark v3
+paper dataset: 0.0003
+covertype features 0 to 9: 0.82
+wave all features: 0.0543

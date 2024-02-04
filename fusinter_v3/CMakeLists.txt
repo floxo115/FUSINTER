@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.22)
 project(FUSINTER_v3)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -19,5 +19,7 @@ target_include_directories(TEST PUBLIC external/Catch2/src)
 add_executable(MAIN main.cpp paper_data.cpp lib/MergeValueComputer.h lib/fusinter.h)
 target_link_libraries(MAIN PRIVATE FUSINTER_v3)
 
-pybind11_add_module(EXAMPLE example.cpp)
-target_include_directories(EXAMPLE PUBLIC external/eigen)
+set(Python_VIRTUALENV FIRST)
+
+pybind11_add_module(FUSINTER_v3_pybind pybind11.cpp)
+target_include_directories(FUSINTER_v3_pybind PUBLIC external/eigen)

@@ -1,3 +1,0 @@
-benchmark v1
-paper dataset: 0.8392
-covertype features 0 to 9: 775.401

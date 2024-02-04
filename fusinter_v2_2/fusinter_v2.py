@@ -103,7 +103,7 @@ class FUSINTERDiscretizer:
         self.merge_value_computer = MergeValueComputer
         #self.entropy_func = entropy_func
 
-    def apply(self, alpha=0.975, lam=1) -> np.ndarray:
+    def apply(self, alpha=0.975, lam=1.) -> np.ndarray:
         """
         :alpha: alpha float parameter for the entropy merge criterion
         :lam: lambda float parameter for the entropy merge criterion
@@ -115,7 +115,7 @@ class FUSINTERDiscretizer:
 
         mvc = MergeValueComputer(table, alpha, lam)
         while len(splits) >= 1:
-            split_values = np.round(mvc.get_all_deltas(), 5)
+            split_values = np.round(mvc.get_all_deltas(), 15)
 
             max_ind = np.argmax(split_values).item()
             if split_values[max_ind] <= 0:

@@ -3,6 +3,8 @@
 
 #include "typedefs.h"
 #include <cassert>
+#include<map>
+#include<set>
 #include<algorithm>
 #include <Eigen/Dense>
 
@@ -22,6 +24,19 @@ namespace lib {
         };
 
         std::vector<float> fit(lib::data_vec data_x,lib::label_vec data_y){
+
+            auto label_set = std::set<int> {data_y.begin(), data_y.end()};
+            std::map<int, int> label_map;
+
+            int i = 0;
+            for(auto el:label_set){
+                label_map[el] = i;
+                i++;
+            }
+            for(int i = 0; i < data_y.size(); i++){
+                data_y[i] = label_map.at(data_y[i]);
+            }
+
             Eigen::VectorXi argsorts(data_x.size());
             for (int i = 0; i < data_x.size(); i++)
                 argsorts[i] = i;
@@ -36,9 +51,9 @@ namespace lib {
                 this->data_y[i] = data_y[argsorts[i]];
             }
 
-            auto splitter = lib::Splitter(data_x, data_y);
+            auto splitter = lib::Splitter(this->data_x, this->data_y);
             auto splits = splitter.apply();
-            auto tablemanager = lib::TableManager(data_x, data_y);
+            auto tablemanager = lib::TableManager(this->data_x, this->data_y);
             auto table = tablemanager.create_table(splits);
             auto mvc = lib::MergeValueComputer(table, this->alpha, this->lam);
 

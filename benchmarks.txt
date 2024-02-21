@@ -11,7 +11,9 @@ benchmark v2.2
 paper dataset: 0.2749
 covertype features 0 to 9: 39.0544
 wave all features: 5.5638
+susy first feature: OOT after 13 hours
 benchmark v3
 paper dataset: 0.0003
 covertype features 0 to 9: 0.82
 wave all features: 0.0543
+susy first feature: 3762.4044

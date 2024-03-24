@@ -1,7 +1,7 @@
-from typing import List
-
 import numpy as np
 from numba import jit
+
+from .orderedHeap import OrderedHeap
 
 
 @jit(nopython=True)
@@ -27,158 +27,80 @@ def shannon_entropy(input_column: np.ndarray, alpha, lam, m, n) -> float:
 
 
 class SplitValueComputer:
-    pass
+    def __init__(self, table: np.ndarray, split_points: np.ndarray, alpha: float, lam: float):
+        assert alpha > 0
+        assert lam > 0
 
+        self.table = table
+        self.alpha = alpha
+        self.lam = lam
 
-class MaxHeap:
-    def __init__(self):
-        self.array: List[MaxHeapElement] = []
+        # compute necessary values for updating the split values
+        self.m = table.shape[0]
+        self.k = table.shape[1]
+        self.n = np.sum(table)
+        self.entropy_func = lambda x: shannon_entropy(x, self.alpha, self.lam, self.m, self.n)
 
-    def __len__(self):
-        return len(self.array)
+        self.heap = OrderedHeap()
+        pos = -1
+        for col_idx in range(table.shape[1] - 1):
+            data = {
+                "split_point": split_points[col_idx],
+                "left_column": table[:, col_idx],
+                "right_column": table[:, col_idx + 1],
+                "pos": col_idx
+            }
+            pos = self.heap.insert(
+                pos,
+                [np.round(self.compute_delta(table[:, col_idx], table[:, col_idx + 1]),15), -col_idx],
+                data,
+            )
 
-    def get_parent(self, pos_idx: int):
-        assert pos_idx >= 0
+    def compute_delta(self, column1: np.ndarray, column2: np.ndarray):
+        delta = 0.
+        delta += self.entropy_func(column1)
+        delta += self.entropy_func(column2)
+        delta -= self.entropy_func(column1 + column2)
 
-        if pos_idx == 0:
-            return None
-        if pos_idx % 2 == 0:
-            return (pos_idx - 1) // 2
-        else:
-            return pos_idx // 2
+        return delta
 
-    def get_left_child(self, pos):
-        return 2 * pos + 1
+    def get_max_delta(self):
+        return self.heap.array[0].value[0]
 
-    def insert(self, table_colum: np.ndarray, prev_idx: int, split_point: float, split_value: float):
-        newel = MaxHeapElement(table_colum, prev_idx, -1, split_point, split_value)
+    def merge_max(self):
+        if len(self.heap) == 0:
+            raise Exception("the heap is already empty")
 
-        self.array.append(newel)
-        pos = len(self.array) - 1
+        max_element = self.heap.array[0]
+        left_neighbor = None
+        right_neighbor = None
 
-        if prev_idx >= 0:
-            self.array[prev_idx].next_idx = pos
+        if max_element.previous_idx != -1:
+            left_neighbor = self.heap.array[max_element.previous_idx]
 
-        while True:
-            parent_pos = self.get_parent(pos)
-            if parent_pos is None:
-                break
+        if max_element.next_idx != -1:
+            right_neighbor = self.heap.array[max_element.next_idx]
 
-            if self.array[parent_pos].split_value < newel.split_value:
-                pos = self.swap(pos)
-            else:
-                break
+        merged_column = max_element.data["left_column"] + max_element.data["right_column"]
 
-        return pos
+        self.heap.delete_element(0)
 
-        # if self.array[parent_pos].split_value < newel.split_value:
-        #     parent = self.array[parent_pos]
-        #
-        #     if newel.prev_idx == parent_pos:
-        #         newel.prev_idx, parent.next_idx = parent.next_idx, newel.prev_idx
-        #     elif newel.next_idx == parent_pos:
-        #         newel.next_idx, parent.prev_idx = parent.prev_idx, newel.next_idx
-        #
-        #     else:
-        #
-        #         if parent.prev_idx >= 0:
-        #             self.array[parent.prev_idx].next_idx = pos
-        #         if parent.next_idx >= 0:
-        #             self.array[parent.next_idx].prev_idx = pos
-        #
-        #         if newel.prev_idx >= 0:
-        #             self.array[newel.prev_idx].next_idx = parent_pos
-        #         if newel.next_idx >= 0:
-        #             self.array[newel.next_idx].prev_idx = parent_pos
-        #
-        #     self.array[parent_pos], self.array[pos] = self.array[pos], self.array[parent_pos]
+        if left_neighbor:
+            left_neighbor.data["right_column"] = merged_column
+            left_neighbor.value[0] = np.round(self.compute_delta(left_neighbor.data["left_column"],
+                                                     left_neighbor.data["right_column"]), 15)
+            self.heap.heapify(self.heap.where_is_element(left_neighbor))
 
-    def swap(self, pos):
-        assert len(self.array) > pos >= 0
-        parent_pos = self.get_parent(pos)
+        if right_neighbor:
+            right_neighbor.data["left_column"] = merged_column
+            right_neighbor.value[0] = np.round(self.compute_delta(right_neighbor.data["left_column"],
+                                                      right_neighbor.data["right_column"]),15)
+            self.heap.heapify(self.heap.where_is_element(right_neighbor))
 
-        if parent_pos is None:
-            raise ValueError("given pos is already root of heap")
+    def get_splits(self):
+        splits = []
+        for el in self.heap.array:
+            splits.append(el.data["split_point"])
 
-        child = self.array[pos]
-
-        parent = self.array[parent_pos]
-
-        if child.prev_idx == parent_pos:
-            child.prev_idx, parent.next_idx = parent.next_idx, child.prev_idx
-        elif child.next_idx == parent_pos:
-            child.next_idx, parent.prev_idx = parent.prev_idx, child.next_idx
-
-        else:
-
-            if parent.prev_idx >= 0:
-                self.array[parent.prev_idx].next_idx = pos
-            if parent.next_idx >= 0:
-                self.array[parent.next_idx].prev_idx = pos
-
-            if child.prev_idx >= 0:
-                self.array[child.prev_idx].next_idx = parent_pos
-            if child.next_idx >= 0:
-                self.array[child.next_idx].prev_idx = parent_pos
-
-        self.array[parent_pos], self.array[pos] = self.array[pos], self.array[parent_pos]
-
-        return parent_pos
-
-    def heapify(self, pos):
-        assert pos < len(self.array)
-        if self.get_left_child(pos) >= len(self.array):
-            return
-
-        split_value = self.array[pos].split_value
-        left_child_idx = self.get_left_child(pos)
-        right_child_idx = left_child_idx + 1
-
-        if len(self.array) > right_child_idx:
-            if self.array[left_child_idx].split_value < self.array[right_child_idx].split_value:
-                max_child_idx = right_child_idx
-            else:
-                max_child_idx = left_child_idx
-
-        else:
-            max_child_idx = left_child_idx
-
-        if self.array[max_child_idx].split_value > self.array[pos].split_value:
-            self.swap(max_child_idx)
-            self.heapify(max_child_idx)
-
-    def delete(self, pos):
-        assert 0 <= pos < len(self.array)
-        if pos == len(self.array) - 1:
-            to_insert = self.array[-1]
-            if to_insert.prev_idx != -1:
-                self.array[to_insert.prev_idx].next_idx = -1
-            self.array = self.array[:-1]
-            return
-
-        to_insert = self.array[-1]
-        to_delete = self.array[pos]
-        if to_delete.prev_idx != -1:
-            self.array[to_delete.prev_idx].next_idx = to_delete.next_idx
-        if to_delete.next_idx != -1:
-            self.array[to_delete.next_idx].prev_idx = to_delete.prev_idx
-
-        if to_insert.prev_idx != -1:
-            self.array[to_insert.prev_idx].next_idx = -1
-
-        self.array[pos] = to_insert
-        self.array = self.array[:-1]
-        self.heapify(pos)
-
-
-class MaxHeapElement:
-    def __init__(self, table_colum: np.ndarray, prev_idx: int, next_idx: int, split_point: float, split_value: float):
-        assert table_colum.ndim == 1
-        self.table_column = table_colum
-        self.prev_idx = prev_idx
-        self.next_idx = next_idx
-        self.split_point = split_point
-        self.split_value = split_value
-
-    def __repr__(self):
-        return f"<MaxHeapElement: {self.table_column}, {self.prev_idx}, {self.next_idx},{self.split_point}, {self.split_value}>"
+        splits.sort()
+        return splits
